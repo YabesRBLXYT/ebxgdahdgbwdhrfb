@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Linkvertise Link</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; text-align: center; }
+        input[type="text"], textarea { width: 300px; padding: 10px; margin: 5px; border-radius: 5px; }
+        .button { margin-top: 10px; padding: 10px 20px; cursor: pointer; border-radius: 5px; background-color: #4a90e2; color: white; }
+        .left-button { position: absolute; bottom: 20px; left: 20px; } /* Styling for the left button at the bottom */
+        textarea { resize: none; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <h2>Update Linkvertise Link</h2>
+    <div>
+        <button class="button" onclick="pasteFromClipboard()">Paste</button>
+    </div>
+    <textarea id="pasteArea" placeholder="Paste original HTML here" rows="10"></textarea>
+    <input type="text" id="newLinkvertise" placeholder="Enter new Linkvertise link">
+    <div>
+        <button class="button" onclick="generateUpdatedHTML()">Generate New HTML</button>
+        <button class="button" onclick="copyUpdatedHTML()">Copy Updated HTML</button>
+    </div>
+    <textarea id="updatedOutput" readonly rows="10"></textarea>
+
+    <a href="1.html" class="button left-button">Generate</a> <!-- Button for next page -->
+
+    <script>
+        function pasteFromClipboard() {
+            navigator.clipboard.readText().then((text) => {
+                document.getElementById("pasteArea").value = text;
+            }).catch((err) => {
+                alert("Failed to read clipboard: " + err);
+            });
+        }
+
+        function generateUpdatedHTML() {
+            const pastedHTML = document.getElementById("pasteArea").value;
+            const newLinkvertise = document.getElementById("newLinkvertise").value.trim();
+
+            if (newLinkvertise === "") {
+                alert("Please enter the new Linkvertise link.");
+                return;
+            }
+
+            const updatedHTML = pastedHTML.replace(/window\.location\.href\s*=\s*"(https:\/\/linkvertise.com\/.*?)"/, `window.location.href="${newLinkvertise}"`);
+            document.getElementById("updatedOutput").value = updatedHTML;
+        }
+
+        function copyUpdatedHTML() {
+            const updatedOutput = document.getElementById("updatedOutput").value;
+            navigator.clipboard.writeText(updatedOutput).then(() => {
+                alert("Updated HTML copied to clipboard!");
+            });
+        }
+    </script>
+</body>
+</html>
