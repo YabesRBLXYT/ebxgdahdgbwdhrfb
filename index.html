@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starry Sky and My Random Space</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+    <style>
+        /* Style dasar untuk body dan background dari file pertama */
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to bottom, #1a1f2e, #121620);
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+        }
+
+        /* Style untuk bintang */
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkling 1s ease-in-out infinite;
+        }
+
+        /* Keyframe animasi kelap-kelip */
+        @keyframes twinkling {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* Style untuk bintang jatuh dengan ekor */
+        .falling-star {
+            position: absolute;
+            background-color: white;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            opacity: 0;
+            box-shadow: 
+                -10px 10px 15px rgba(255, 255, 255, 0.5), 
+                -20px 20px 30px rgba(255, 255, 255, 0.3), 
+                -30px 30px 45px rgba(255, 255, 255, 0.1), 
+                -40px 40px 60px rgba(255, 255, 255, 0.05);
+            transform: translate(0, 0);
+            animation: fall 1.5s linear infinite;
+        }
+
+        /* Keyframe animasi bintang jatuh dengan ekor */
+        @keyframes fall {
+            0% { opacity: 1; transform: translate(0, 0) scale(1); }
+            100% { opacity: 0; transform: translate(-300px, 300px) scale(0.6); }
+        }
+
+        /* Responsivitas untuk layar yang lebih kecil */
+        @media (max-width: 768px) {
+            .star, .falling-star {
+                width: 2px;
+                height: 2px;
+                box-shadow: 
+                    -8px 8px 10px rgba(255, 255, 255, 0.5), 
+                    -16px 16px 20px rgba(255, 255, 255, 0.3), 
+                    -24px 24px 30px rgba(255, 255, 255, 0.1), 
+                    -32px 32px 40px rgba(255, 255, 255, 0.05);
+            }
+        }
+
+        /* Style untuk konten dari file kedua */
+        #title {
+            font-size: 2.5em;
+            color: #00c9ff;
+            margin-bottom: 20px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideInContent 1s 0.5s forwards ease-in-out;
+        }
+
+        .content {
+            font-size: 1.1em;
+            line-height: 1.5;
+            color: #ccc;
+            overflow: hidden;
+            white-space: pre-wrap;
+        }
+
+        .mystery-btn {
+            background: none;
+            border: 1px solid #00c9ff;
+            color: #00c9ff;
+            cursor: pointer;
+            padding: 10px 20px;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 0.8s ease, color 0.3s, background-color 0.3s;
+        }
+        .mystery-btn:hover {
+            background-color: #00c9ff;
+            color: #fff;
+        }
+
+        @keyframes slideInContent {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            #title {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Kontainer bintang -->
+    <div id="star-container"></div>
+
+    <!-- Konten dari file kedua -->
+    <div class="container">
+        <h1 id="title">Welcome to My Random Space</h1>
+        <p class="content" id="content">
+            This is a place filled with random surprises. I keep things hidden, so if you find something else... consider yourself lucky. I'm just a wanderer, exploring different ideas and sharing pieces of randomness. You might find something, or maybe not. If you’re curious, stay tuned.
+        </p>
+        <button class="mystery-btn" id="mysteryButton">keep looking</button>
+    </div>
+
+    <script>
+        // Script untuk bintang dari file pertama
+        const starContainer = document.getElementById("star-container");
+
+        function createStar() {
+            const star = document.createElement("div");
+            star.classList.add("star");
+            star.style.top = Math.random() * 100 + "vh";
+            star.style.left = Math.random() * 100 + "vw";
+            const size = Math.random() * 2 + 1;
+            star.style.width = size + "px";
+            star.style.height = size + "px";
+            star.style.animationDelay = Math.random() * 0.5 + "s";
+            starContainer.appendChild(star);
+            setTimeout(() => { star.remove(); }, 3000);
+        }
+
+        function createFallingStar() {
+            const fallingStar = document.createElement("div");
+            fallingStar.classList.add("falling-star");
+            fallingStar.style.top = Math.random() * 20 + "vh";
+            fallingStar.style.left = "100vw";
+            const size = Math.random() * 2 + 3;
+            fallingStar.style.width = size + "px";
+            fallingStar.style.height = size + "px";
+            fallingStar.style.animationDelay = Math.random() * 0.5 + "s";
+            starContainer.appendChild(fallingStar);
+            setTimeout(() => { fallingStar.remove(); }, 1500);
+        }
+
+        setInterval(() => { createStar(); }, Math.random() * 100 + 100);
+        setInterval(createMultipleFallingStars, 1500);
+        function createMultipleFallingStars() {
+            const fallingStarCount = Math.floor(Math.random() * 3) + 1;
+            for (let i = 0; i < fallingStarCount; i++) {
+                createFallingStar();
+            }
+        }
+
+        // Script untuk teks dan tombol dari file kedua
+        const titleElement = document.getElementById('title');
+        const titleText = titleElement.textContent;
+        titleElement.textContent = '';
+        let titleIndex = 0;
+        function typeTitle() {
+            if (titleIndex < titleText.length) {
+                titleElement.textContent += titleText[titleIndex];
+                titleIndex++;
+                setTimeout(typeTitle, 30);
+            } else {
+                typeContent();
+            }
+        }
+        const contentElement = document.getElementById('content');
+        const contentText = contentElement.innerHTML;
+        contentElement.innerHTML = '';
+        let contentIndex = 0;
+        function typeContent() {
+            if (contentIndex < contentText.length) {
+                const char = contentText[contentIndex];
+                if (char === '<') {
+                    const endTagIndex = contentText.indexOf('>', contentIndex) + 1;
+                    contentElement.innerHTML += contentText.slice(contentIndex, endTagIndex);
+                    contentIndex = endTagIndex;
+                } else {
+                    contentElement.innerHTML += char;
+                    contentIndex++;
+                }
+                setTimeout(typeContent, 50);
+            } else {
+                document.querySelector('.mystery-btn').style.opacity = 1;
+            }
+        }
+        const mysteryButton = document.getElementById('mysteryButton');
+        let clickCount = 0;
+        mysteryButton.addEventListener('click', () => {
+            clickCount++;
+            switch (clickCount) {
+                case 1: alert("Hmm... nothing here."); break;
+                case 2: alert("You're still clicking?"); break;
+                case 3: alert("Maybe there really is something here..."); break;
+                case 4: alert("Or maybe there isn't."); break;
+                case 5: alert("Alright, I'll admit there's nothing hidden here."); break;
+                case 6: alert("But you seem curious, so keep going if you want."); break;
+                case 7: alert("Persistence is key... but it might not lead anywhere."); break;
+                case 8: alert("Almost there? Or maybe not."); break;
+                case 9: alert("You know, I could just make this button disappear..."); break;
+                case 10:
+                    alert("Fine, you've reached the end. Goodbye, button!");
+                    mysteryButton.style.transition = "opacity 0.5s ease";
+                    mysteryButton.style.opacity = 0;
+                    setTimeout(() => { mysteryButton.style.display = "none"; }, 500);
+                    break;
+                default: alert("The button is gone now. There’s really nothing left!");
+            }
+        });
+        typeTitle();
+    </script>
+</body>
+</html>
