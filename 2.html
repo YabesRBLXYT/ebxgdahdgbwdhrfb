@@ -8,7 +8,7 @@
         body { font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; text-align: center; }
         input[type="text"], textarea { width: 300px; padding: 10px; margin: 5px; border-radius: 5px; }
         .button { margin-top: 10px; padding: 10px 20px; cursor: pointer; border-radius: 5px; background-color: #4a90e2; color: white; }
-        .left-button { position: absolute; bottom: 20px; left: 20px; } /* Styling for the left button at the bottom */
+        .left-button { position: absolute; bottom: 20px; left: 20px; }
         textarea { resize: none; overflow-y: auto; }
     </style>
 </head>
@@ -24,7 +24,7 @@
         <button class="button" onclick="copyUpdatedHTML()">Copy Updated HTML</button>
     </div>
     <textarea id="updatedOutput" readonly rows="10"></textarea>
-
+    
     <a href="1.html" class="button left-button">Generate</a> <!-- Button for next page -->
 
     <script>
@@ -45,7 +45,12 @@
                 return;
             }
 
-            const updatedHTML = pastedHTML.replace(/window\.location\.href\s*=\s*"(https:\/\/linkvertise.com\/.*?)"/, `window.location.href="${newLinkvertise}"`);
+            // Regex to update the URL in setTimeout within <script> tags
+            const updatedHTML = pastedHTML.replace(
+                /setTimeout\(\(\)=>{window\.location\.href="[^"]*";},1500\);/,
+                `setTimeout(()=>{window.location.href="${newLinkvertise}";},1500);`
+            );
+
             document.getElementById("updatedOutput").value = updatedHTML;
         }
 
