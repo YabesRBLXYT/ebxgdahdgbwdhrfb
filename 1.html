@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Check Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #4a90e2;
+            margin-bottom: 10px;
+        }
+
+        
+
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .readonly {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+
+        button {
+            background-color: #4a90e2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #357abd;
+        }
+
+        #output {
+            width: 100%;
+            max-width: 600px;
+            height: 150px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-top: 10px;
+            resize: none;
+            overflow-y: scroll;
+            white-space: nowrap;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .right-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px; /* Button positioned at the bottom right */
+        }
+    </style>
+</head>
+<body>
+    <h2>Generate HTML with Base64 Link</h2>
+
+    <input type="text" id="linkInput" placeholder="Enter your link here">
+    <input type="text" id="linkvertiseInput" placeholder="Enter Linkvertise link here">
+    <input type="text" id="fileName" class="readonly" readonly placeholder="Generated HTML file name">
+
+    <div class="container">
+        <button onclick="generateFileName()">Generate Filename</button>
+        <button onclick="generateHTML()">Generate HTML</button>
+        <button onclick="copyFileName()">Copy Filename</button>
+        <button onclick="copyGeneratedHTML()">Copy HTML</button>
+    </div>
+
+    <h3>Generated HTML:</h3>
+    <textarea id="output" readonly></textarea>
+
+    <a href="2.html" class="button right-button">Update</a> <!-- Button for next page -->
+
+    <script>
+        function generateFileName() {
+            const fileNameInput = document.getElementById("fileName");
+            const fileName = `access_check_${Date.now()}.html`;
+            fileNameInput.value = fileName;
+        }
+
+        function generateHTML() {
+            const linkInput = document.getElementById("linkInput").value.trim();
+            const linkvertiseInput = document.getElementById("linkvertiseInput").value.trim();
+            const formattedLink = linkInput.startsWith("http") ? linkInput : "https://" + linkInput;
+            const base64Link = btoa(formattedLink);
+
+            const generatedHTML = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Access Check</title></head><body><h1 id="message">Checking access...</h1><script>const error404="${base64Link}";function decodeBase64(encoded){return atob(encoded);}const referrer=document.referrer;if(referrer.includes("linkvertise.com")){window.location.href=decodeBase64(error404);}else{document.getElementById("message").innerText="Don't bypass, bro! Try again.";setTimeout(()=>{window.location.href="${linkvertiseInput}";},1500);}<\/script></body></html>`;
+
+            document.getElementById("output").value = generatedHTML;
+        }
+
+        function copyFileName() {
+            const fileName = document.getElementById("fileName").value;
+            navigator.clipboard.writeText(fileName).then(() => {
+                alert("File name copied to clipboard!");
+            }).catch(err => {
+                console.error('Error copying file name: ', err);
+            });
+        }
+
+        function copyGeneratedHTML() {
+            const output = document.getElementById("output").value;
+            setTimeout(() => {
+                navigator.clipboard.writeText(output).then(() => {
+                    alert("Generated HTML copied to clipboard!");
+                }).catch(err => {
+                    console.error('Error copying HTML: ', err);
+                });
+            }, 100); // 100 ms delay for sequential copy
+        }
+    </script>
+</body>
+</html>
